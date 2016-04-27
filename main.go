@@ -4,12 +4,13 @@ import "Server/PBProto"
 import "net"
 import "fmt"
 import "sync/atomic"
+import "time"
 
 var closeNum int32
 var maxConnects int
 var exitCh chan struct{}
 func init()  {
-    maxConnects = 10000;
+    maxConnects = 1000;
     exitCh = make(chan struct{})
 }
 
@@ -45,10 +46,17 @@ func main()  {
         
         go session.Run();
     }
-    select {
-        case <- exitCh:
-        {
-            return
+    tickCh := time.Tick(time.Second * 5)
+    for {
+        select {
+            case <- exitCh:
+            {
+                return
+            }
+            case <- tickCh:
+            {
+                fmt.Printf("close num = %d\n", closeNum)
+            }
         }
     }
 }
