@@ -37,7 +37,7 @@ func main()  {
         conn, err := net.Dial("tcp", "127.0.0.1:9999")
         if nil != err {
             fmt.Println("connect remote error : " + err.Error())
-            return
+            continue
         }
         
         session, _ := Network.NewSession(conn, onSessionClose)
@@ -51,7 +51,7 @@ func main()  {
         select {
             case <- exitCh:
             {
-                return
+                
             }
             case <- tickCh:
             {
